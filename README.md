@@ -29,3 +29,18 @@ A arquitetura do projeto é construída em Python e foca em ferramentas de proce
 ## 📂 Estrutura do Projeto
 
 O projeto segue a seguinte organização modular:
+
+Big_Data_Project/ | ├── data/ │ ├── raw/ # Dados de vendas brutos (incluindo o CSV simulado) │ └── processed/ # Dados limpos e transformados pelo PySpark | ├── src/ # Código-fonte Python principal │ ├── data_generator.py # Script de geração dos dados simulados (Pandas) │ └── etl_pyspark.py # Script de processamento ETL e Análise (PySpark) | ├── notebooks/ # (Opcional) Jupyter Notebooks para exploração de dados ├── reports/ # Resultados de análise e visualizações └── requirements.txt # Lista de dependências Python
+
+## 🚀 Como Executar
+
+1.  **Clone o repositório:** `git clone https://docs.github.com/pt/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github`
+2.  **Crie e Ative o Ambiente Virtual:**
+    ```bash
+    python -m venv venv
+    source venv/Scripts/activate  # Para Git Bash/Linux
+    # OU: venv\Scripts\activate   # Para CMD/PowerShell
+    ```
+3.  **Instale as Dependências:** `pip install -r requirements.txt`
+4.  **Gere os Dados Simulados:** `python src/data_generator.py`
+5.  **Execute o Processamento PySpark:** `python src/etl_pyspark.py`
