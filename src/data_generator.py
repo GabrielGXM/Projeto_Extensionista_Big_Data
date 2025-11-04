@@ -8,6 +8,11 @@ start_date = datetime(2025, 1, 1)
 end_date = datetime(2025, 6, 30)
 num_records = 50000  # 50.000 linhas de transações (simulando Big Data em escala menor)
 
+#Horario de funcionamento
+
+HORA_INICIO = 10
+HORA_FIM = 18
+
 # Menu do Restaurante
 menu = {
     'Bebida': ['Refrigerante', 'Água Mineral', 'Suco Natural', 'Cerveja Artesanal'],
@@ -25,12 +30,26 @@ precos = {
 
 # --- 2. GERAÇÃO DE DADOS ---
 data_list = []
+
+# Diferença total em dias
+days_range = (end_date - start_date).days
+
+# Total de segundos entre 10:00 e 18:00 (8 horas * 3600 segundos/hora)
+seconds_in_operation = (HORA_FIM - HORA_INICIO) * 3600
+
 for i in range(num_records):
-    # Data e Hora Aleatórias
-    time_delta = end_date - start_date
-    random_days = np.random.randint(time_delta.days)
-    random_seconds = np.random.randint(86400) # 24*60*60
-    data_hora = start_date + timedelta(days=random_days, seconds=random_seconds)
+    # 1. Escolhe um dia aleatório dentro do range
+    random_days = np.random.randint(days_range)
+    
+    # 2. Escolhe um segundo aleatório DENTRO do horário de funcionamento
+    random_seconds_in_window = np.random.randint(seconds_in_operation)
+    
+    # 3. Calcula o offset: Dia inicial + dias aleatórios + (10h em segundos) + segundos aleatórios
+    # data_base = start_date (01/01/2025 00:00:00)
+    data_hora = start_date + \
+                timedelta(days=random_days) + \
+                timedelta(hours=HORA_INICIO) + \
+                timedelta(seconds=random_seconds_in_window)
 
     # Escolher Categoria e Item
     categoria = np.random.choice(list(menu.keys()), p=[0.3, 0.2, 0.4, 0.1]) # Probabilidade de venda

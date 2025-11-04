@@ -1,0 +1,11 @@
+# Este arquivo lista todas as dependências do projeto.
+# Use: pip install -r requirements.txt para configurar o ambiente virtual.
+
+# Ferramentas de Big Data
+pyspark==3.5.0  # Versão estável do PySpark (ajuste se usou outra)
+findspark        # Ajuda a PySpark a encontrar a instalação do Spark no ambiente local
+
+# Ferramentas de Data Science e Visualização
+pandas>=2.1.0    # Usado para gerar dados e para relatórios (reporting.py)
+numpy>=1.26.0    # Dependência de Pandas e para cálculos numéricos
+matplotlib>=3.8.0 # Usado para gerar os gráficos na pasta reports/figures
