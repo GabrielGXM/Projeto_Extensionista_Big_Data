@@ -58,12 +58,12 @@ def run_all_analysis(df_processado: DataFrame):
         .when(col("DiaSemana") == 6, "Sexta")
         .when(col("DiaSemana") == 7, "Sábado")
         .otherwise("Desconhecido")
-    ).select("Dia", "Receita_Semanal") # Apenas as colunas que importam para format_and_save
+    ).select("Dia", "Receita_Semanal","DiaSemana") # Apenas as colunas que importam para format_and_save
 
     format_and_save(
         df_dia, "Dia", "Receita_Semanal", 
         "data/processed/receita_por_dia_semana", 
-        "Receita_Semanal", is_desc=True
+        "DiaSemana", is_desc=False
     )
 
     # --- Análise 4: Lucratividade por Item (Foco no Ticket Médio) ---

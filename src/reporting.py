@@ -62,13 +62,26 @@ def plot_receita_por_categoria():
     df = load_and_clean_data("receita_por_categoria", "Receita_Total", sort_col='Valor_Numerico')
     if df is None: return
 
-    plt.figure(figsize=(10, 6))
-    plt.bar(df['Categoria'], df['Valor_Numerico'], color=['#3D9970', '#FF4136', '#FFDC00', '#0074D9'])
+    plt.figure(figsize=(16, 6))
+    bars = plt.bar(df['Categoria'], df['Valor_Numerico'], color=['#3D9970', '#FF4136', '#FFDC00', '#0074D9'])
+
+    ## Adiciona o valor exato em cima de cada barra
+    for bar in bars:
+        yval = bar.get_height()
+        # Posiciona o texto acima da barra. Formatamos como monetário (R$ X,XX)
+        plt.text(
+            bar.get_x() + bar.get_width()/2.0, # Posição X (centro da barra)
+            yval + 500,                         # Posição Y (acima da barra, ajustado em 500 unidades)
+            f'R$ {yval:,.2f}',                  # O texto (valor formatado)
+            ha='center', va='bottom', fontsize=10 
+        )
+    
+    plt.title('1. Receita Total por Categoria de Produto', fontsize=16)
     
     plt.title('1. Receita Total por Categoria de Produto', fontsize=16)
     plt.xlabel('Categoria', fontsize=12)
     plt.ylabel('Receita Total (R$)', fontsize=12)
-    plt.xticks(rotation=45, ha='right')
+    plt.xticks(rotation=0, ha='center')
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.tight_layout()
     plt.savefig(os.path.join(REPORTS_PATH, "1_receita_por_categoria.png"))
@@ -80,14 +93,23 @@ def plot_receita_por_hora():
     df = load_and_clean_data("receita_por_hora", "Receita_Horaria", sort_col='Hora', is_monetary=True)
     if df is None: return
 
-    plt.figure(figsize=(12, 6))
-    plt.plot(df['Hora'], df['Valor_Numerico'], marker='o', linestyle='-', color='#0074D9')
+    plt.figure(figsize=(13, 6))
+    bars = plt.bar(df['Hora'], df['Valor_Numerico'], color='#0074D9',alpha=0.8)
     
-    plt.title('2. Tendência de Receita por Hora do Dia (10h às 23h)', fontsize=16)
-    plt.xlabel('Hora do Dia (24h)', fontsize=12)
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(
+            bar.get_x() + bar.get_width()/2.0, 
+            yval, # Posicionamento é direto no topo da barra
+            f'R$ {yval:,.0f}', # Use ,.0f se os valores forem grandes e inteiros
+            ha='center', va='bottom', fontsize=9, rotation=0
+        )
+
+    plt.title('2. Tendência de Receita por Hora do Dia (10h às 17h)', fontsize=16)
+    plt.xlabel('Hora do Dia (10-17h)', fontsize=12)
     plt.ylabel('Receita Total (R$)', fontsize=12)
     plt.xticks(np.arange(df['Hora'].min(), df['Hora'].max() + 1)) # Mostra todas as horas
-    plt.grid(axis='both', linestyle='--', alpha=0.7)
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.tight_layout()
     plt.savefig(os.path.join(REPORTS_PATH, "2_receita_por_hora.png"))
     print("Gráfico 2 salvo: receita_por_hora.png")
@@ -103,13 +125,22 @@ def plot_receita_por_dia_semana():
     df['Dia'] = pd.Categorical(df['Dia'], categories=day_order, ordered=True)
     df = df.sort_values('Dia')
 
-    plt.figure(figsize=(10, 6))
-    plt.bar(df['Dia'], df['Valor_Numerico'], color='#FF851B')
+    plt.figure(figsize=(12, 6))
+    bars = plt.bar(df['Dia'], df['Valor_Numerico'], color='#FF851B')
     
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(
+            bar.get_x() + bar.get_width()/2.0, 
+            yval + 500, 
+            f'R$ {yval:,.2f}', 
+            ha='center', va='bottom', fontsize=10
+        )
+
     plt.title('3. Receita Total por Dia da Semana', fontsize=16)
     plt.xlabel('Dia da Semana', fontsize=12)
     plt.ylabel('Receita Total (R$)', fontsize=12)
-    plt.xticks(rotation=45, ha='right')
+    plt.xticks(rotation=0, ha='center')
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.tight_layout()
     plt.savefig(os.path.join(REPORTS_PATH, "3_receita_por_dia_semana.png"))
@@ -131,13 +162,18 @@ def plot_ticket_medio_por_item(top_n=15):
     # Pega apenas os Top N itens
     df_top = df.head(top_n).sort_values(by='Valor_Numerico', ascending=True)
 
-    plt.figure(figsize=(10, 8))
+    plt.figure(figsize=(20, 8))
     # Gráfico de barras horizontal
     plt.barh(df_top['Item'], df_top['Valor_Numerico'], color='#2ECC40')
     
     # Adiciona o Ticket Médio ao lado das barras
     for index, value in enumerate(df_top['Valor_Numerico']):
-        plt.text(value, index, f'R$ {value:.2f}', va='center')
+        plt.text(
+            value,               # Posição X (o valor da barra)
+            index,               # Posição Y (o centro da barra, que é o índice)
+            f'R$ {value:.2f}',   # O texto
+            ha='left', va='center', fontsize=10 
+        )
 
     plt.title(f'4. Top {top_n} Itens por Ticket Médio (Itens Mais Lucrativos)', fontsize=16)
     plt.xlabel('Ticket Médio (R$)', fontsize=12)
